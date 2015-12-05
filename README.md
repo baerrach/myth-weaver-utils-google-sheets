@@ -1,3 +1,11 @@
+# WARNING
+
+The current version is functionally complete - it works for my characters :)
+
+YMMV.
+
+The documentation is also non-existent. This will get rectified shortly.
+
 # Installing
 
 *WARNING*: The current version is not available as a Google App. This means you need to make a copy of the example sheet, and do some extra steps before you can use it. Unfortunately this means that new code changes will not be available to you. I hope to copy versions of the code here so that you can cut-n-paste into your project and when I work out how to create an App properly then you wont need to do that anyway.
