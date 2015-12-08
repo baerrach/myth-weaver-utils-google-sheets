@@ -6,27 +6,27 @@ YMMV.
 
 The documentation is also non-existent. This will get rectified shortly.
 
+# Overview
+
+## What can Dossier Dominator do for me?
+
+This started out life as a race between two parties in the same game competing to see who could start working together the quickest. TravelLog created the first Dossier summary of his party's skills; Characters, Classes, Skills (over a defined threshold). This was a great way to see what characters were good at, but didn't show where the gaps were, and it didn't scale as players made changes to their character sheets (or even later when they leveled). So instead of spending the few hours manually updating the dossier with the changes, I've spend a few weeks writing code to automate the process - lucky you!
+
+The current features list of Dossier Dominator includes:
+
+* Create a table of Skills by Character
+* Create a summary of Skills per Character
+* Create an advanced statblock for a Character
+* Create a dice roll block for each Character (currently only Initiative supported)
+
+
+As a player, I was creating overly elaborate statblocks. The ones that come with the myth-weavers sheets via `Generate Statblock` have a great overview, but I find for my preferred posting style (and especially across multiple games) I like to be reminded of what my character can do easily in the preview post option. I also find it great to be able cut and paste key information from the statblock for inclusion in OOC/action spoiler tags. And depending on the GM having everything 'in the post' instead of on another page is a handy reference.
+
+
+
 # Installing
 
-*WARNING*: The current version is not available as a Google App. This means you need to make a copy of the example sheet, and do some extra steps before you can use it. Unfortunately this means that new code changes will not be available to you. I hope to copy versions of the code here so that you can cut-n-paste into your project and when I work out how to create an App properly then you wont need to do that anyway.
-
-## Copy the example sheet
-
-Open https://docs.google.com/spreadsheets/d/1RcDCJZRbLlAke_T8vA5V0fyaWblSwtjCW7AeJrAZmDA/edit?usp=sharing and then `File > Make a copy`
-
-## Bind the triggers
-
-From the Spreadsheet menu select `Tools > Script editor...`.
-
-Select `Resources > Current project's triggers`.
-
-Click `No triggers set up. Click here to add one now.`
-
-Set `Run` to `onOpen`, `Events` to `From spreadsheet`, and `onOpen`, click `Save`.
-
-You will be prompted to with a dialog `Authorisation required`, click `Continue`, and then `Allow`.
-
-Go back to your Spreadsheet and then reload it (this will close the Script editor) and after it has finished reloading you should have a new menu after `Help` called `Myth Weavers`.
+See the wiki page on [Installing](https://github.com/baerrach/myth-weaver-utils-google-sheets/wiki/Installing)
 
 # How to use
 
