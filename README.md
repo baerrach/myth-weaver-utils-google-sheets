@@ -10,7 +10,7 @@ The documentation here should be sufficient, but improvements are welcome.
 
 ## What can Dossier Dominator do for me?
 
-This started out life as a race between two parties in the same game competing to see who could start working together the quickest. TravelLog created the first Dossier summary of his party's skills; Characters, Classes, Skills (over a defined threshold). This was a great way to see what characters were good at, but didn't show where the gaps were, and it didn't scale as players made changes to their character sheets (or even later when they leveled). So instead of spending the few hours manually updating the dossier with the changes, I've spend a few weeks writing code to automate the process - lucky you!
+This started out life as a race between two parties in the same game competing to see who could start working together the quickest. TravelLog created the first Dossier summary of his party's skills; Characters, Classes, and Skills over a defined threshold. This was a great way to see what characters were good at, but didn't show where the gaps were, and it didn't scale as players made changes to their character sheets (or even later when they leveled). So instead of spending the few hours manually updating the dossier with the changes, I've spend a few weeks writing code to automate the process - lucky you!
 
 The current feature list includes:
 
