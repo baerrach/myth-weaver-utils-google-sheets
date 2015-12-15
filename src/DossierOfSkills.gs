@@ -23,6 +23,9 @@ function createDossierOfSkills() {
   dossierSheet.activate();
   for (var i=0; i < characters.length; i++) {
     character = characters[i];
+    if (!character) {
+      continue;
+    }
     skills = character.skills;
     skillCells = arrayOfZeros(Math.max(MAX_SKILLS, knownSkills.length));
     

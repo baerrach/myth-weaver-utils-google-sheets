@@ -580,6 +580,9 @@ function parseCharacter(json) {
       sheetdata;
   
   sheetdata = SheetFactory(mythWeaverObject.sheet_template_id, mythWeaverObject.sheetdata);
+  if (!sheetdata) {
+    return;
+  }
   
   character = new Character(sheetdata.getName());
   character.id = mythWeaverObject.id;

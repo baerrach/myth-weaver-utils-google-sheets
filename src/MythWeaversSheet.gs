@@ -14,7 +14,7 @@ function SheetFactory(sheet_template_id, sheetdata) {
   if (39 === sheet_template_id) {
     return new PathfinderSheet(sheetdata);
   }
-  Logger.log("Unknown Sheet Template Id = " + character.sheet_template_id);
+  Logger.log("Unknown Sheet Template Id = " + sheet_template_id);
   return null;
 } 
 
@@ -544,3 +544,4 @@ PathfinderExperimentalSheet.prototype.getWisdom = function(i) {
 PathfinderExperimentalSheet.prototype.getCharisma = function(i) {
   return this.sheetdata["charisma_temp_score"] || this.sheetdata["charisma_score"];
 }
+
