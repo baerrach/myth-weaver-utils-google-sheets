@@ -96,4 +96,3 @@ var SPELLS_DB_SHEET = {
     return getSheet(this.name);
   }
 }
-

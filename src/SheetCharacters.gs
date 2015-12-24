@@ -15,7 +15,7 @@ var CHARACTERS_SHEET = {
     return getSheet(this.name);
   }
 }
-CHARACTERS_SHEET.getCharacters = function () 
+CHARACTERS_SHEET.getCharacters = function ()
 {
   var range = this.sheet.getDataRange(),
       characters = [];

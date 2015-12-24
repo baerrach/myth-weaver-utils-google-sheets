@@ -8,13 +8,13 @@
 function _copy(source, sheet, destination) {
   var destinationSheet,
       note = [];
-   
+
   LOG_SHEET.sheet.activate();
   Logger.log("Copying Spreadsheet locally:");
   Logger.log("Source = " + source.getName());
   Logger.log("Sheet = " + sheet.getName());
   Logger.log("Destination = " + destination.getName());
-  
+
   Logger.log("Started ... (please wait)");
   destinationSheet = sheet.copyTo(destination);
   Logger.log("  Copy completed.");
@@ -33,24 +33,23 @@ function _copy(source, sheet, destination) {
 function copyFeatsDb() {
   var source = SpreadsheetApp.openById('1XqQO21AyE2WtLwW0wSjA9ov74A9tmJmVJjrhPK54JHQ');
   var sheet = source.getSheets()[0];
-  
+
   var destination = SpreadsheetApp.getActiveSpreadsheet();
-  _copy(source, sheet, destination); 
+  _copy(source, sheet, destination);
 }
 
 function copySpellDb() {
   var source = SpreadsheetApp.openById('1cuwb3QSvWDD7GG5McdvyyRBpqycYuKMRsXgyrvxvLFI');
   var sheet = source.getSheets()[0];
-  
+
   var destination = SpreadsheetApp.getActiveSpreadsheet();
-  _copy(source, sheet, destination); 
+  _copy(source, sheet, destination);
 }
 
 function copyTraitsDb() {
   var source = SpreadsheetApp.openById('1OQH-t50ZqZ-WSajGRbaALzbExij2mL-i13G_p054jig');
   var sheet = source.getSheets()[0];
-  
-  var destination = SpreadsheetApp.getActiveSpreadsheet();
-  _copy(source, sheet, destination); 
-}
 
+  var destination = SpreadsheetApp.getActiveSpreadsheet();
+  _copy(source, sheet, destination);
+}

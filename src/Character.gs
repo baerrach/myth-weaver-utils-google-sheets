@@ -8,7 +8,7 @@ Character.prototype.getTrainedSkills = function() {
   var filteredSkills = [],
       skill,
       skills;
-  
+
   skills = this.skills;
   for (skillName in skills) {
     skill = skills[skillName];
@@ -16,46 +16,46 @@ Character.prototype.getTrainedSkills = function() {
       filteredSkills.push(skill);
     }
   }
-  
+
   return filteredSkills;
 };
-Character.prototype.getUntrainedSkills = function() {  
+Character.prototype.getUntrainedSkills = function() {
   var filteredSkills = [],
       skill,
       skills;
-  
+
   skills = this.skills;
   for (skillName in skills) {
     skill = skills[skillName];
     if (!skill.rank && skill.isUseableUntrained) {
       filteredSkills.push(skill);
     }
-  }    
-  
-  return filteredSkills;  
+  }
+
+  return filteredSkills;
 };
-Character.prototype.getUnusableSkills = function() {  
+Character.prototype.getUnusableSkills = function() {
   var filteredSkills = [],
       skill,
       skills;
-  
+
   skills = this.skills;
   for (skillName in skills) {
     skill = skills[skillName];
     if (!skill.rank && !skill.isUseableUntrained) {
       filteredSkills.push(skill);
     }
-  }    
-  
-  return filteredSkills;  
+  }
+
+  return filteredSkills;
 };
 
 /**
-There is no good name for this.
-It is just a base value, and a bunch of adjustments.
-Score is used for anything numeric; e.g. stats, skills, initiative, saving throws, hp, etc.
-The adjustments determine the final value.
-The acutal sheet value is available in 'sheetValue', and the calculated value is available in 'value'.
+ There is no good name for this.
+ It is just a base value, and a bunch of adjustments.
+ Score is used for anything numeric; e.g. stats, skills, initiative, saving throws, hp, etc.
+ The adjustments determine the final value.
+ The acutal sheet value is available in 'sheetValue', and the calculated value is available in 'value'.
  */
 function Score(name, base, sheetValue) {
   this.name = name;
@@ -63,11 +63,11 @@ function Score(name, base, sheetValue) {
   this.adjustments = [];
   this.sheetValue = sheetValue || 0;
   this.showAsModifier = true;
-  
+
   if (isNaN(sheetValue)) {
     this.sheetValue = Number.NaN;
   }
-  
+
   Object.defineProperty(this, 'value', {
     get: function() {
       return this.adjustments.reduce(function (p, c) {
@@ -77,7 +77,7 @@ function Score(name, base, sheetValue) {
         return p + parseInt(c.value, 10);
       }, parseInt(this.base, 10));
     }
-  });    
+  });
 }
 Score.prototype.getAbilityScoreModifier = function () {
   return Math.floor((this.value - 10) / 2);
@@ -90,7 +90,7 @@ Score.prototype.getConditionalAdjustments = function() {
 Score.prototype.getUnconditionalAdjustments = function() {
   return this.adjustments.filter(function (a) {
     return !a.isConditional;
-  })  
+  })
 }
 Score.prototype.toString = function() {
   var text,
@@ -98,7 +98,7 @@ Score.prototype.toString = function() {
       unconditionalAdjustments,
       conditionalAdjustments,
       s = [];
-  
+
   text = this.value;
   if (this.showAsModifier) {
     text = toModifier(text);
@@ -110,9 +110,9 @@ Score.prototype.toString = function() {
   if (unconditionalAdjustments) {
     s.push(unconditionalAdjustments);
   }
-  
+
   s = [s.join(", ")];
-  
+
   conditionalAdjustments = this.getConditionalAdjustments().join(" ");
   if (conditionalAdjustments) {
     text += " " + conditionalAdjustments;
@@ -121,10 +121,10 @@ Score.prototype.toString = function() {
 
   text = ooc(text, s.join(" "));
   if (!isNaN(this.sheetValue) && this.value != this.sheetValue) {
-    text += " [[B][COLOR='RED']!WARNING![/COLOR][/B] Sheet value " + this.sheetValue + 
+    text += " [[B][COLOR='RED']!WARNING![/COLOR][/B] Sheet value " + this.sheetValue +
       " does not match calculated value " + this.value + "=" + s.join(" ") + "]";
   }
-  
+
   return text;
 };
 Score.prototype.addAdjustment = function(a) {
@@ -132,7 +132,7 @@ Score.prototype.addAdjustment = function(a) {
 }
 
 /**
-If you pass a Score in as the only paramater value, then this will be used to setup the adjustment.
+ If you pass a Score in as the only paramater value, then this will be used to setup the adjustment.
  */
 function Adjustment(value, reason, isConditional) {
   if (arguments.length === 1) {
@@ -157,29 +157,102 @@ Adjustment.prototype.toString = function() {
   if (this.isConditional) {
     s.push(")");
   }
-  
+
   return s.join("");
 };
+
+/**
+ Adjustments based on size. This defaults to the values in
+ http://www.d20pfsrd.com/gamemastering/combat#Table-Size-Modifiers
+
+ Use the multiplier to adjust the values, e.g. for SpecialSizeModifer multiplier = -1.
+ */
+function SizeModifier(size, multiplier) {
+
+  var lookup = {
+    "Fine": +8,
+    "Diminutive": +4,
+    "Tiny": +2,
+    "Small": +1,
+    "Medium": 0,
+    "Large": -1,
+    "Huge": -2,
+    "Gargantuan": -4,
+    "Colossal": -8
+  };
+
+  multiplier = multiplier || 1;
+  Adjustment.call(this, lookup[size] * multiplier, "Size (" + size + ")", false);
+}
+SizeModifier.prototype = Object.create(Adjustment.prototype);
+SizeModifier.prototype.constructor = SizeModifier;
+
+
+/**
+ Adjustments based on size for flyk from
+ http://www.d20pfsrd.com/skills/fly
+ */
+function FlySizeModifier(size) {
+
+  var lookup = {
+    "Fine": +8,
+    "Diminutive": +6,
+    "Tiny": +4,
+    "Small": +2,
+    "Medium": 0,
+    "Large": -2,
+    "Huge": -4,
+    "Gargantuan": -6,
+    "Colossal": -8
+  };
+
+  Adjustment.call(this, lookup[size], "Size (" + size + ")", false);
+}
+FlySizeModifier.prototype = Object.create(Adjustment.prototype);
+FlySizeModifier.prototype.constructor = FlySizeModifier;
+
+/**
+ Adjustments based on size for stealth from
+ http://www.d20pfsrd.com/skills/stealth
+ */
+function StealthSizeModifier(size) {
+
+  var lookup = {
+    "Fine": +16,
+    "Diminutive": +12,
+    "Tiny": +8,
+    "Small": +4,
+    "Medium": 0,
+    "Large": -4,
+    "Huge": -8,
+    "Gargantuan": -12,
+    "Colossal": -16
+  };
+
+  Adjustment.call(this, lookup[size], "Size (" + size + ")", false);
+}
+StealthSizeModifier.prototype = Object.create(Adjustment.prototype);
+StealthSizeModifier.prototype.constructor = StealthSizeModifier;
 
 
 function parseCharacter(json) {
   function adjustments(character) {
     var abilityName,
-        allAdjustments, 
+        allAdjustments,
         adjustment,
         parts,
         value,
         reason,
         to,
         isConditional;
-    
+
     allAdjustments = character.feats.filter(function (f) {
       return startsWith(f, "+") || startsWith(f, "-");
     });
-    
+
     for (var i=0; i < allAdjustments.length; i++) {
       parts = allAdjustments[i].split(":");
-      
+
       abilityName = parts[0].slice(1);
       if (character.abilities[abilityName]) {
         value = character.abilities[abilityName].getAbilityScoreModifier();
@@ -191,7 +264,7 @@ function parseCharacter(json) {
       reason = parts[2];
       isConditional = parts[3];
       adjustment = new Adjustment(value, reason, isConditional);
-      
+
       if ("AC" === to) {
         character.ac.addAdjustment(adjustment);
         character.acFlatFooted.addAdjustment(adjustment);
@@ -210,10 +283,10 @@ function parseCharacter(json) {
       }
       else {
         Logger.log("Unknown adjustment " + allAdjustments[i]);
-      }    
+      }
     }
   }
-  
+
   function addAbilities(character, sheetdata) {
     character.abilities = {};
     character.abilities.Str = new Score("Str", sheetdata.getStrength());
@@ -223,7 +296,7 @@ function parseCharacter(json) {
     character.abilities.Wis = new Score("Wis", sheetdata.getWisdom());
     character.abilities.Cha = new Score("Cha", sheetdata.getCharisma());
   }
-  
+
   function addArmorClass(character, sheetdata) {
     // http://paizo.com/pathfinderRPG/prd/combat.html
     // 10 + armor bonus + shield bonus + Dexterity modifier + other modifiers
@@ -234,11 +307,11 @@ function parseCharacter(json) {
         acFlatFooted = new Score("Flat-footed", 10, sheetdata.getAcFlatFooted()),
         protections,
         protection;
-    
+
     ac.showAsModifier = false;
     acTouch.showAsModifier = false;
-    acFlatFooted.showAsModifier = false; 
-    
+    acFlatFooted.showAsModifier = false;
+
     // for each worn protective gear add adjustment
     protections = character.protections;
     if (protections.length === 0) {
@@ -263,7 +336,7 @@ function parseCharacter(json) {
         }
       }
     }
-        
+
     if (character.abilities.Dex.getAbilityScoreModifier() > maxDex) {
       adjustment = new Adjustment(maxDex, "Dex (capped)");
     }
@@ -272,48 +345,64 @@ function parseCharacter(json) {
     }
     ac.addAdjustment(adjustment);
     acTouch.addAdjustment(adjustment);
-    
+
+    if ("Medium" !== character.size) {
+      adjustment = new SizeModifier(character.size);
+      ac.addAdjustment(adjustment);
+      acTouch.addAdjustment(adjustment);
+      acFlatFooted.addAdjustment(adjustment);
+    }
+
     // other modifiers handled in adjustments() section as they are manually added to the sheet
-    
-    character.ac = ac;   
-    character.acTouch = acTouch; 
+
+    character.ac = ac;
+    character.acTouch = acTouch;
     character.acFlatFooted = acFlatFooted;
   }
 
   function addCombat(character, sheetdata) {
     character.bab = sheetdata.getBab();
-    
+
     character.cmb = new Score("CMB", 0, sheetdata.getCmb());
     character.cmb.addAdjustment(new Adjustment(character.bab, "BAB"));
-    character.cmb.addAdjustment(new Adjustment(character.abilities.Str));
-    
+    if ("Fine" === character.size ||
+        "Diminutive" === character.size ||
+        "Tiny" === character.size) {
+      character.cmb.addAdjustment(new Adjustment(character.abilities.Dex));
+    }
+    else {
+      character.cmb.addAdjustment(new Adjustment(character.abilities.Str));
+    }
+    character.cmb.addAdjustment(new SizeModifier(character.size, -1));
+
     character.cmd = new Score("CMD", 10, sheetdata.getCmd());
     character.cmd.addAdjustment(new Adjustment(character.bab, "BAB"));
     character.cmd.addAdjustment(new Adjustment(character.abilities.Str));
     character.cmd.addAdjustment(new Adjustment(character.abilities.Dex));
+    character.cmd.addAdjustment(new SizeModifier(character.size, -1));
   }
-    
+
   /**
-  Add all the equipment.
-  
-  If a location is specified then add the item to the "container" for that location.
-  
-  Weights are defined as a suffix to the name of the item in the format {<quantity@><weight>lb}, where quantity is optional.
-  If not specified, then the weight field will be whatever was in the sheetdata.
-  */
+   Add all the equipment.
+
+   If a location is specified then add the item to the "container" for that location.
+
+   Weights are defined as a suffix to the name of the item in the format {<quantity@><weight>lb}, where quantity is optional.
+   If not specified, then the weight field will be whatever was in the sheetdata.
+   */
   function addEquipment(character, sheetdata) {
     var sheetdataEquipment,
         container,
         containers = {},
         item,
         equipment;
-    
+
     function calculateWeight(item) {
-      var startIndex, 
-          endIndex, 
+      var startIndex,
+          endIndex,
           weightCommand,
           parts;
-      
+
       startIndex = item.name.indexOf("{");
       endIndex = item.name.indexOf("}");
       if (startIndex === -1 || endIndex === -1) {
@@ -326,13 +415,13 @@ function parseCharacter(json) {
         return parseFloat(parts[0]);
       }
 
-      return parseInt(parts[0], 10) * parseFloat(parts[1]);            
+      return parseInt(parts[0], 10) * parseFloat(parts[1]);
     }
-    
+
     sheetdataEquipment = sheetdata.getEquipment();
-    
+
     equipment = [];
-    
+
     for (var i=0; i < sheetdataEquipment.length; i++) {
       item = sheetdataEquipment[i];
       item.weight = calculateWeight(item);
@@ -345,7 +434,7 @@ function parseCharacter(json) {
         containers[item.location].push(item);
       }
     }
-    
+
     for (var containerKey in containers) {
       container = containers[containerKey];
       container.weight = container.reduce(function(p, c) {
@@ -353,37 +442,37 @@ function parseCharacter(json) {
         return p + itemWeight;
       }, 0.0);
     }
-    
+
     character.containers = containers;
-    character.equipment = equipment;    
+    character.equipment = equipment;
   }
-  
+
   function addSavingThrows(character, sheetdata) {
     character.savingThrows = {};
     character.savingThrows.fort = new Score("Fort", sheetdata.getFort(), sheetdata.getFortTotal());
     character.savingThrows.fort.addAdjustment(new Adjustment(character.abilities.Con));
-    
+
     character.savingThrows.ref = new Score("Ref", sheetdata.getRef(), sheetdata.getRefTotal());
     character.savingThrows.ref.addAdjustment(new Adjustment(character.abilities.Dex));
-    
+
     character.savingThrows.will = new Score("Will", sheetdata.getWill(), sheetdata.getWillTotal());
     character.savingThrows.will.addAdjustment(new Adjustment(character.abilities.Wis));
   }
-    
+
   function addSkills(character, sheetdata) {
     var sheetSkills = sheetdata.getSkills(),
         sheetSkill,
         skill,
         armorCheckPenalty = 0;
-    
+
     for (var i=0; i < character.protections.length; i++) {
       if (character.protections[i].checkPenalty) {
         armorCheckPenalty += parseInt(character.protections[i].checkPenalty, 10);
       }
     }
-    
-    character.skills = {};    
-    
+
+    character.skills = {};
+
     for (var i=0; i < sheetSkills.length; i++) {
       sheetSkill = sheetSkills[i];
       if (!sheetSkill.ability) {
@@ -394,13 +483,13 @@ function parseCharacter(json) {
       skill.rank = sheetSkill.rank;
       skill.isUseableUntrained = ! (
         skill.name === "Handle Animal"
-        || skill.name === "Linguistics"
-        || skill.name === "Profession"
-        || skill.name === "Sleight of Hand"
-        || skill.name === "Use Magic Device"
-        || startsWith(skill.name, "Knowledge")
-      ) 
-      
+          || skill.name === "Linguistics"
+          || skill.name === "Profession"
+          || skill.name === "Sleight of Hand"
+          || skill.name === "Use Magic Device"
+          || startsWith(skill.name, "Knowledge")
+      )
+
       if (sheetSkill.rank) {
         skill.addAdjustment(new Adjustment(skill.rank, "Rank"));
         if (sheetSkill.isClassSkill) {
@@ -414,29 +503,36 @@ function parseCharacter(json) {
 
       character.skills[skill.name] = skill;
     }
-  }
-  
-  /*
-  Expect data on the sheet in the form of <SpellName>:<Note>:<ClassName>
-  Where Note and ClassName are optional.
-  Also note that this field is not contained within {}s (these are handled in spellBlockHandler)
 
-  The spell will be looked up in the spellsdb by SpellName only.
-  If it can't be found then it will be placed into the Unknown class
-  
-  character.spells = {
-    "Unknown" = [], // Everything is at Level 0 since we dont know about them from the data provided
-    "Wizard" = [ // Level 0 at index 0, etc.
-    [ {name: "name", cast=numberCast, prepared=numberPrepared, note: "optional note"}, ...], // Level 0. Array also has properties to represent spell level meta-data
-      // .dc=Save DC, .perDay = Score() + Adjustments, .known=nunmberOfSpellsKnown
-      [], // Level 1
-    ], // Array also has properties to represent global spell meta-data
-    // .type="Prepared" || "Spontaneous" ( Prepared uses numberCast/numberPrepared on sheet, Spontaneous uses numberCast on sheet )
-    "Priest" = [],
-    "<ClassName>" = [],
+    // Adjust for Size
+    character.skills["Fly"].addAdjustment(new FlySizeModifier(character.size));
+    if (character.skills["Acrobatics"].rank) {
+      character.skills["Fly"].addAdjustment(new Adjustment(2, "Acrobatics"));
+    }
+    character.skills["Stealth"].addAdjustment(new StealthSizeModifier(character.size));
   }
-  
-  */
+
+  /*
+   Expect data on the sheet in the form of <SpellName>:<Note>:<ClassName>
+   Where Note and ClassName are optional.
+   Also note that this field is not contained within {}s (these are handled in spellBlockHandler)
+
+   The spell will be looked up in the spellsdb by SpellName only.
+   If it can't be found then it will be placed into the Unknown class
+
+   character.spells = {
+   "Unknown" = [], // Everything is at Level 0 since we dont know about them from the data provided
+   "Wizard" = [ // Level 0 at index 0, etc.
+   [ {name: "name", cast=numberCast, prepared=numberPrepared, note: "optional note"}, ...], // Level 0. Array also has properties to represent spell level meta-data
+   // .dc=Save DC, .perDay = Score() + Adjustments, .known=nunmberOfSpellsKnown
+   [], // Level 1
+   ], // Array also has properties to represent global spell meta-data
+   // .type="Prepared" || "Spontaneous" ( Prepared uses numberCast/numberPrepared on sheet, Spontaneous uses numberCast on sheet )
+   "Priest" = [],
+   "<ClassName>" = [],
+   }
+
+   */
   function addSpells(character, sheetdata) {
     var sheetSpells = sheetdata.getSpells(),
         sheetSpell,
@@ -449,10 +545,10 @@ function parseCharacter(json) {
         spellsdb,
         spellInDb,
         levelIndex;
-        
+
     spellsdb = SPELLS_DB_SHEET.sheet.getDataRange().getValues();
     spellsdb.name = SPELLS_DB_SHEET.name;
-    
+
     spells = character.spells;
     defaultClassName = Object.keys(character.spells)[0];
     for (var i=0; i < sheetSpells.length; i++) {
@@ -462,7 +558,7 @@ function parseCharacter(json) {
         // {}s are handled in spellBlockHandler
         continue;
       }
-      
+
       spell = {};
 
       parts = sheetSpell.name.split(":");
@@ -470,7 +566,7 @@ function parseCharacter(json) {
       spell.note = parts[1];
       className = parts[2] || defaultClassName;
       spell.level = 0;
-      
+
       spellInDb = find(spellsdb, [ { column: SPELLS_DB_SHEET.column.name-1, value: spell.name } ]);
       if (spellInDb) {
         levelIndex = SPELLS_DB_SHEET.column[className]-1;
@@ -486,7 +582,7 @@ function parseCharacter(json) {
       }
       spell.cast = sheetSpell.cast;
       spell.memorized = sheetSpell.memorized;
-           
+
       if (parseInt(spell.level,10) === undefined ) {
         // Ignore anything that is not a number
         continue;
@@ -495,20 +591,20 @@ function parseCharacter(json) {
         // Ignore empty spells
         continue;
       }
-      
+
       if (!spells[className]) {
         // This shouldn't be needed, except for typos in spell className, or {className:Type:...} commands.
         spells[className] = [];
       }
-      
+
       if (!spells[className][spell.level]) {
         spells[className][spell.level] = [];
       }
       spells[className][spell.level].push(spell);
     }
-    
-    
-    // If there is more than one class of spells, then the myth-weaver sheet doesn't have space for including the metadata. So it must be specified as an adjustment 
+
+
+    // If there is more than one class of spells, then the myth-weaver sheet doesn't have space for including the metadata. So it must be specified as an adjustment
     // (TODO: handle the adjustment https://github.com/baerrach/myth-weaver-utils-google-sheets/issues/1)
     // Otherwise a single class of spells will use the sheetdata spell metadata.
     if (1 === Object.keys(character.spells).length) {
@@ -519,16 +615,16 @@ function parseCharacter(json) {
         spells[level].perDay = sheetSpellMetdata[level].perDay;
         spells[level].bonus = sheetSpellMetdata[level].bonus;
         spells[level].dc = sheetSpellMetdata[level].dc;
-      }           
+      }
     }
   }
-  
-  /**
-  Handle {}s in the spells section.
 
-  Currently known handlers are for:
-  - <className>:Type:<Arcane || Divine>:<Prepared || Spontaneous>
-  */
+  /**
+   Handle {}s in the spells section.
+
+   Currently known handlers are for:
+   - <className>:Type:<Arcane || Divine>:<Prepared || Spontaneous>
+   */
   function spellBlockHandler(character, sheetdata) {
     var sheetSpells = sheetdata.getSpells(),
         sheetSpell,
@@ -536,14 +632,14 @@ function parseCharacter(json) {
         classSpells,
         parts,
         hasSpells = false;
-        
+
     character.spells = {};
     for (var i=0; i < sheetSpells.length; i++) {
       sheetSpell = sheetSpells[i];
       if (sheetSpell) {
         hasSpells = true;
       }
-      
+
       parts = [];
       if (startsWith(sheetSpell.name, "{")) {
         parts = sheetSpell.name.slice(1,-1).split(":");
@@ -551,39 +647,39 @@ function parseCharacter(json) {
 
       // ===========================================================
       // Handle spell block adjustments
-      
-      // Handle "<className>:Type:<Arcane || Divine>:<Prepared || Spontaneous>"      
+
+      // Handle "<className>:Type:<Arcane || Divine>:<Prepared || Spontaneous>"
       if ("Type" === parts[1]) {
         className = parts[0];
         if (!character.spells[className]) {
           character.spells[className] = [];
         }
-                
+
         character.spells[className].type = parts[2];
         character.spells[className].preparation = parts[3];
         continue;
       }
-      // ===========================================================      
+      // ===========================================================
     }
-    
+
     if (hasSpells && 0 === Object.keys(character.spells).length) {
       // If no {className:Type:...} defined then default to "Unknown".
       character.spells["Unknown"] = [];
     }
   }
-  
+
   var mythWeaverObject = JSON.parse(json);
-//  var mythWeaverObject = testData_Karolina;
-//  var mythWeaverObject = testData_Arabella;
- 
+  //  var mythWeaverObject = testData_Karolina;
+  //  var mythWeaverObject = testData_Arabella;
+
   var character,
       sheetdata;
-  
+
   sheetdata = SheetFactory(mythWeaverObject.sheet_template_id, mythWeaverObject.sheetdata);
   if (!sheetdata) {
     return;
   }
-  
+
   character = new Character(sheetdata.getName());
   character.id = mythWeaverObject.id;
   character.updated_at = mythWeaverObject.updated_at;
@@ -599,32 +695,33 @@ function parseCharacter(json) {
   character.movement.burrow = sheetdata.getMovementBurrow();
   character.protections = sheetdata.getProtections();
   character.race = sheetdata.getRace();
+  character.size = capitalizeFirstLetter(sheetdata.getSize());
   character.weapons = sheetdata.getWeapons();
-    
+
   addAbilities(character, sheetdata);
   addSavingThrows(character, sheetdata);
   addCombat(character, sheetdata);
-  
-  addArmorClass(character, sheetdata);  
-  
+
+  addArmorClass(character, sheetdata);
+
   character.initiative = new Score("Initiative", 0, sheetdata.getInitiative());
   character.initiative.addAdjustment(new Adjustment(character.abilities.Dex));
-  
+
   character.feats = sheetdata.getFeats();
-  
+
   addSkills(character, sheetdata);
-  
+
   spellBlockHandler(character, sheetdata);
   addSpells(character, sheetdata);
-  
+
   character.languages = sheetdata.getLanguages();
-  
+
   character.concentration = new Score("Concentration", 0, Number.NaN);
-  
+
   addEquipment(character, sheetdata);
-  
-  adjustments(character);  
-  
+
+  adjustments(character);
+
   return character;
 }
 

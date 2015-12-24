@@ -11,6 +11,6 @@ function generatedBy() {
   s.push(" v" + VERSION);
   s.push(" on ");
   s.push(new Date().toISOString().slice(0, 10));
-  
+
   return s.join("");
 }

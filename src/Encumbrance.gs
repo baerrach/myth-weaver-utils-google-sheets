@@ -13,11 +13,11 @@ function createEncumbrance() {
       numRows,
       startRow,
       startColumn;
-  
+
   if (!validateActiveSheetIs(CHARACTERS_SHEET)) {
     return;
   }
-  
+
   // Use the current range, to get the sheetId
   range = SpreadsheetApp.getActiveRange();
   Logger.log("Active range = " + range.getSheet().getName() + "@" + range.getRow() + "," + range.getColumn());
@@ -28,7 +28,7 @@ function createEncumbrance() {
   }
   // adjust character row index to absolute value (by removing any header rows)
   characterIndex -= CHARACTERS_SHEET.firstDataRow - 1;
-    
+
   json = getCharacterJSON(sheetId);
   character = parseCharacter(json);
 
@@ -42,24 +42,24 @@ function createEncumbrance() {
     range = encumbranceSheet.getRange(startRow, startColumn, numRows, 3);
     range.clear();
   }
-  
+
   range = encumbranceSheet.getRange(startRow, startColumn, 3, 3);
   range.setFontWeight("bold");
-  encumbrance.push([character.name, null, null]);  
+  encumbrance.push([character.name, null, null]);
   encumbrance.push(["Containers", null, null]);
   encumbrance.push(["Name", "Weight", null]);
   for (var containerKey in character.containers) {
     item = character.containers[containerKey];
     encumbrance.push([containerKey, item.weight, null]);
-  }   
-  range = encumbranceSheet.getRange(1, startColumn, encumbrance.length, 3);  
+  }
+  range = encumbranceSheet.getRange(1, startColumn, encumbrance.length, 3);
   range.setValues(encumbrance);
 
   startRow = encumbrance.length + 2;
   range = encumbranceSheet.getRange(startRow, startColumn, 1, 3);
-  range.setFontWeight("bold");  
+  range.setFontWeight("bold");
   encumbrance = [];
-  encumbrance.push(["Name", "Weight", "Location"]); 
+  encumbrance.push(["Name", "Weight", "Location"]);
   for (var i=0; i < character.equipment.length; i++) {
     item = character.equipment[i];
     encumbrance.push([item.name, item.weight, item.location]);

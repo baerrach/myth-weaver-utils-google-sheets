@@ -14,6 +14,6 @@ function oocWithSelection(text, selection, content) {
   }
   if (selection) {
     content += "\n\n[B]Selected[/B]: " + selection;
-  }      
+  }
   return ooc(text, content);
 }

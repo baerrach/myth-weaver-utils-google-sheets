@@ -1,6 +1,6 @@
 /**
-Copied from http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
-*/
+ Copied from http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
+ */
 function replaceAll(s, find, replace) {
   if (s === undefined || s === null || s === "") {
     return s;
@@ -9,8 +9,8 @@ function replaceAll(s, find, replace) {
 }
 
 /**
-Copied from https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
-*/
+ Copied from https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+ */
 function startsWith(s, searchString, position) {
   if (s == undefined) {
     return false;
@@ -25,16 +25,16 @@ function transpose(a){
 }
 
 /**
-  Find the first matching row in a database for all criteria supplied.
-  criterion: { 
-    column: <index to match>, 
-    value: <value to match>
-  }
-  */
+ Find the first matching row in a database for all criteria supplied.
+ criterion: {
+ column: <index to match>,
+ value: <value to match>
+ }
+ */
 function find(db, criteria) {
-  var row, 
+  var row,
       match;
-  return db.filter(function (row) {   
+  return db.filter(function (row) {
     return criteria.reduce(function (p, c) {
       return p && (c.value === undefined || row[c.column] === c.value);
     }, true);
@@ -42,11 +42,11 @@ function find(db, criteria) {
 }
 
 /**
-find(db, criteria), and then index the answer by the specified column..
-If the answer does not exist then return an error message.
+ find(db, criteria), and then index the answer by the specified column..
+ If the answer does not exist then return an error message.
  */
 function lookupInDb(db, criteria, columns) {
-  var answer; 
+  var answer;
   answer = find(db, criteria);
   if (answer) {
     return columns.map(function(column) {
@@ -64,11 +64,11 @@ function lookupInDb(db, criteria, columns) {
       return p;
     }, []).join(", ");
     return "Unable to locate " + index + " in " + db.name;
-  }  
+  }
 }
 
 function arrayOfZeros(length) {
-  return Array.apply(null, Array(length)).map(function() { 
-    return 0; 
+  return Array.apply(null, Array(length)).map(function() {
+    return 0;
   });
 }

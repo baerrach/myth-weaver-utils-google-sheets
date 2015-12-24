@@ -1,6 +1,6 @@
 /**
-Using the characters from CHARACTER_SHEET, create a dossier of skills.
-Unknown skills will be auto-included into the skill column.
+ Using the characters from CHARACTER_SHEET, create a dossier of skills.
+ Unknown skills will be auto-included into the skill column.
  */
 function createDossierOfSkills() {
   var charactersSheet = CHARACTERS_SHEET.sheet,
@@ -19,7 +19,7 @@ function createDossierOfSkills() {
   knownSkills = knownSkills.filter(function (d) {
     return d;
   });
-  
+
   dossierSheet.activate();
   for (var i=0; i < characters.length; i++) {
     character = characters[i];
@@ -28,16 +28,16 @@ function createDossierOfSkills() {
     }
     skills = character.skills;
     skillCells = arrayOfZeros(Math.max(MAX_SKILLS, knownSkills.length));
-    
+
     for (skillName in skills) {
       skill = skills[skillName];
       skillRow = findSkillRow(knownSkills, skill.name);
       // Always use the sheet value, not the calculate value for dossier of skills.
       skillCells[skillRow] = skill.sheetValue;
     }
-    
+
     // write character name
-    dossierSheet.getRange(DOSSIERS_SHEET.headerRow, DOSSIERS_SHEET.column.firstCharacter+i).setValue(character.name);  
+    dossierSheet.getRange(DOSSIERS_SHEET.headerRow, DOSSIERS_SHEET.column.firstCharacter+i).setValue(character.name);
 
     // write skill values
     var values = transpose([skillCells])
@@ -52,7 +52,7 @@ function createDossierOfSkills() {
 function findSkillRow(knownSkills, skill) {
   var length=knownSkills.length,
       currentSkill;
-  // Unknown skills will be inserted into the first empty slot, or at the end, of the knownSkills array  
+  // Unknown skills will be inserted into the first empty slot, or at the end, of the knownSkills array
   for (var i=0; i < length; i++) {
     currentSkill = knownSkills[i]
     if ("" === currentSkill) {
