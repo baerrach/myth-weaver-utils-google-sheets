@@ -89,9 +89,6 @@ Sheet.prototype.getFortTotal = function () {
 Sheet.prototype.getHp = function () {
   return this.sheetdata[this.keyFor.hp];
 }
-Sheet.prototype.getMaxHp = function () {
-  return this.sheetdata[this.keyFor.maxHp];
-}
 Sheet.prototype.getInitiative = function () {
   return this.sheetdata[this.keyFor.initiative];
 }
@@ -108,6 +105,9 @@ Sheet.prototype.getLanguages = function () {
   }
   return languages;
 }
+Sheet.prototype.getMaxHp = function () {
+  return this.sheetdata[this.keyFor.maxHp];
+}
 Sheet.prototype.getName = function () {
   return this.sheetdata[this.keyFor.name];
 }
@@ -122,6 +122,9 @@ Sheet.prototype.getRef = function () {
 }
 Sheet.prototype.getRefTotal = function () {
   return this.sheetdata[this.keyFor.refTotal];
+}
+Sheet.prototype.getSize = function () {
+  return this.sheetdata[this.keyFor.size];
 }
 Sheet.prototype.getSkill = function (i) {
   var keys = this.getSkillKeys(i),
@@ -261,6 +264,7 @@ function PathfinderSheet(sheetdata) {
   this.keyFor.race = "Race";
   this.keyFor.ref = "ReflexBase";
   this.keyFor.refTotal = "Reflex";
+  this.keyFor.size = "Size";
   this.keyFor.will = "WillBase";
   this.keyFor.willTotal = "Will";
 
@@ -428,6 +432,7 @@ function PathfinderExperimentalSheet(sheetdata) {
   this.keyFor.race = "race";
   this.keyFor.ref = "reflex_base";
   this.keyFor.refTotal = "reflex_total";
+  this.keyFor.size = "size";
   this.keyFor.will = "will_base";
   this.keyFor.willTotal = "will_total";
 }

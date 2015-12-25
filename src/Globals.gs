@@ -1,6 +1,6 @@
 var Logger = BetterLog.useSpreadsheet();
 
-var VERSION = "13-ALPHA";
+var VERSION = "12-ALPHA";
 var HOME_PAGE = "https://github.com/baerrach/myth-weaver-utils-google-sheets";
 
 function generatedBy() {

@@ -418,11 +418,10 @@ function traits(traitsForStatblock) {
   for (var i=0; i < traits.length; i++) {
     tmp.push(traitStablock(traits[i]));
   }
-  if (tmp.length === 0) {
-    tmp.push("No {Trait:Racial} values found");
+  if (tmp.length !== 0) {
+    lines.push("[B][U]Racial Traits[/U][/B]: " + tmp.join(", "));
+    lines.push("");
   }
-  lines.push("[B][U]Racial Traits[/U][/B]: " + tmp.join(", "));
-  lines.push("");
 
   traits = traitsForStatblock.filter(function (t) {
     return !isRacialTrait(t) && !isDrawbackTrait(t);
@@ -431,11 +430,10 @@ function traits(traitsForStatblock) {
   for (var i=0; i < traits.length; i++) {
     tmp.push(traitStablock(traits[i]));
   }
-  if (tmp.length === 0) {
-    tmp.push("No {Trait} values found");
+  if (tmp.length !== 0) {
+    lines.push("[B][U]Traits[/U][/B]: " + tmp.join(", "));
+    lines.push("");
   }
-  lines.push("[B][U]Traits[/U][/B]: " + tmp.join(", "));
-  lines.push("");
 
   traits = traitsForStatblock.filter(function (t) {
     return isDrawbackTrait(t);
@@ -444,11 +442,10 @@ function traits(traitsForStatblock) {
   for (var i=0; i < traits.length; i++) {
     tmp.push(traitStablock(traits[i]));
   }
-  if (tmp.length === 0) {
-    tmp.push("None");
+  if (tmp.length !== 0) {
+    lines.push("[B][U]Drawbacks[/U][/B]: " + tmp.join(", "));
+    lines.push("");
   }
-  lines.push("[B][U]Drawbacks[/U][/B]: " + tmp.join(", "));
-  lines.push("");
 
   return lines.join("\n");
 }
@@ -497,8 +494,10 @@ function spells(character) {
 
   spells = character.spells;
   if (spells) {
-    lines.push("[B][U]Spells[/U][/B]: ");
     classNames = Object.keys(spells).sort();
+    if (classNames.length !== 0) {
+      lines.push("[B][U]Spells[/U][/B]: ");
+    }
     for (var classNameIndex=0; classNameIndex < classNames.length; classNameIndex++) {
       className = classNames[classNameIndex];
       classSpells = spells[className];
