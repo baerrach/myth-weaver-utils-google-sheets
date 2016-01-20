@@ -37,6 +37,8 @@ function createEncumbrance() {
 
   startRow = 1;
   startColumn = 1 + (characterIndex-1)*4;
+  encumbranceSheet.getRange(startRow, startColumn).activate();
+
   numRows = encumbranceSheet.getLastRow();
   if (numRows) {
     range = encumbranceSheet.getRange(startRow, startColumn, numRows, 3);
