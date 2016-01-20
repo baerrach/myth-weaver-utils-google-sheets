@@ -506,9 +506,6 @@ function parseCharacter(json) {
 
     // Adjust for Size
     character.skills["Fly"].addAdjustment(new FlySizeModifier(character.size));
-    if (character.skills["Acrobatics"].rank) {
-      character.skills["Fly"].addAdjustment(new Adjustment(2, "Acrobatics"));
-    }
     character.skills["Stealth"].addAdjustment(new StealthSizeModifier(character.size));
   }
 
