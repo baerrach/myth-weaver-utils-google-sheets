@@ -275,8 +275,17 @@ function parseCharacter(json) {
       else if ("Concentration" === to) {
         character.concentration.addAdjustment(adjustment);
       }
+      else if ("Fortitude" === to || "Fort" === to) {
+        character.savingThrows.fort.addAdjustment(adjustment);
+      }
       else if ("Initiative" === to || "Init" === to) {
         character.initiative.addAdjustment(adjustment);
+      }
+      else if ("Reflex" === to || "Ref" === to) {
+        character.savingThrows.ref.addAdjustment(adjustment);
+      }
+      else if ("Will" === to) {
+        character.savingThrows.will.addAdjustment(adjustment);
       }
       else if (character.skills[to]) {
         character.skills[to].addAdjustment(adjustment);
