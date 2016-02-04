@@ -267,8 +267,10 @@ function parseCharacter(json) {
 
       if ("AC" === to) {
         character.ac.addAdjustment(adjustment);
-        character.acFlatFooted.addAdjustment(adjustment);
-        if ("Natural" !== reason) {
+        if (! startsWith(reason, "Dodge")) {
+          character.acFlatFooted.addAdjustment(adjustment);
+        }
+        if (! startsWith(reason, "Natural")) {
           character.acTouch.addAdjustment(adjustment);
         }
       }
