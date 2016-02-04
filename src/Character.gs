@@ -491,10 +491,12 @@ function parseCharacter(json) {
       skill = new Score(sheetSkill.name, 0, sheetSkill.modifier);
       skill.rank = sheetSkill.rank;
       skill.isUseableUntrained = ! (
-        skill.name === "Handle Animal"
+        skill.name === "Disable Device"
+          || skill.name === "Handle Animal"
           || skill.name === "Linguistics"
           || skill.name === "Profession"
           || skill.name === "Sleight of Hand"
+          || skill.name === "Spellcraft"
           || skill.name === "Use Magic Device"
           || startsWith(skill.name, "Knowledge")
       )
