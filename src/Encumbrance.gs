@@ -20,7 +20,6 @@ function createEncumbrance() {
 
   // Use the current range, to get the sheetId
   range = SpreadsheetApp.getActiveRange();
-  Logger.log("Active range = " + range.getSheet().getName() + "@" + range.getRow() + "," + range.getColumn());
   characterIndex = range.getRow();
   sheetId = range.getSheet().getRange(characterIndex, 1).getValue();
   if (!validateSheetId(characterIndex, sheetId)) {
