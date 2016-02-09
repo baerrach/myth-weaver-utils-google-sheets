@@ -277,6 +277,12 @@ function parseCharacter(json) {
       else if ("Concentration" === to) {
         character.concentration.addAdjustment(adjustment);
       }
+      else if ("CMB" === to) {
+        character.cmb.addAdjustment(adjustment);
+      }
+      else if ("CMD" === to) {
+        character.cmd.addAdjustment(adjustment);
+      }
       else if ("Fortitude" === to || "Fort" === to) {
         character.savingThrows.fort.addAdjustment(adjustment);
       }
