@@ -1,11 +1,12 @@
 /**
- Copied from http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
- */
-function replaceAll(s, find, replace) {
+Copied from http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
+Protected against undefined strings.
+*/
+function capitalizeFirstLetter(s) {
   if (s === undefined || s === null || s === "") {
     return s;
   }
-  return s.split(find).join(replace);
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 /**
