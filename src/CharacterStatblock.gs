@@ -675,7 +675,7 @@ function weapons(character) {
  When the active cell contains a Myth Weaver sheet Id, then fill the STATBLOCK_SHEET with
  a generated statblock for that character.
  */
-function createStatblock() {
+function _createStatblock(range) {
   var sheetId,
       json,
       character,
@@ -696,14 +696,10 @@ function createStatblock() {
     }
   }
 
-  if (!validateActiveSheetIs(CHARACTERS_SHEET)) {
-    return;
-  }
   // Creating a stat block requires the latest character sheet data, not a cache.
-  updateCharacterSheetData();
+  _updateCharacterSheetData(range);
 
   // Use the current range, to get the sheetId
-  range = SpreadsheetApp.getActiveRange();
   characterIndex = range.getRow();
   sheetId = range.getSheet().getRange(characterIndex, 1).getValue();
   if (!validateSheetId(characterIndex, sheetId)) {
@@ -738,4 +734,20 @@ function createStatblock() {
   statblockSheet.activate();
   statblockSheet.getRange(STATBLOCK_SHEET.headerRow, characterIndex).setFontWeight("bold").setValue(character.name);
   statblockSheet.getRange(STATBLOCK_SHEET.firstDataRow, characterIndex).setWrap(false).setValue(statblock.join("\n")).activate();
+}
+
+function createStatblock() {
+  if (!validateActiveSheetIs(CHARACTERS_SHEET)) {
+    return;
+  }
+
+  _createStatblock(SpreadsheetApp.getActive().getActiveSheet().getActiveCell());
+}
+
+function createAllCharactersStatblock() {
+  var charactersSheet = CHARACTERS_SHEET.sheet,
+      range = charactersSheet.getDataRange();
+  for (var i=CHARACTERS_SHEET.firstDataRow; i <= range.getNumRows(); i++) {
+    _createStatblock(range.offset(i-1, 0));
+  }
 }

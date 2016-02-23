@@ -14,6 +14,7 @@ function onOpen(e) {
     .addItem('Create dossier summary (using all "Characters")', 'createDossierSummary')
     .addItem('Create GM dice roll bbcodes (using all "Characters")', 'createDiceRolls')
     .addItem('Create encumbrance for character ("Characters:active row")', 'createEncumbrance')
+    .addItem('Create statblock for all characters (using all "Characters")', 'createAllCharactersStatblock')
     .addItem('Create statblock for character ("Characters:active row")', 'createStatblock')
     .addToUi();
 
