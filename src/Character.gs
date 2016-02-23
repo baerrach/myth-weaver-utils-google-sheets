@@ -536,6 +536,8 @@ function parseCharacter(json) {
    The spell will be looked up in the spellsdb by SpellName only.
    If it can't be found then it will be placed into the Unknown class
 
+   NOTE: Some spellcasting will have empty levels, e.g. Alchemists do not know cantrips.
+
    character.spells = {
    "Unknown" = [], // Everything is at Level 0 since we dont know about them from the data provided
    "Wizard" = [ // Level 0 at index 0, etc.
@@ -626,12 +628,12 @@ function parseCharacter(json) {
     if (1 === Object.keys(character.spells).length) {
       sheetSpellMetdata = sheetdata.getSpellMetadata();
       spells = character.spells[Object.keys(character.spells)[0]];
-      for (var level=0; level < spells.length; level++) {
-        spells[level].known = sheetSpellMetdata[level].known;
-        spells[level].perDay = sheetSpellMetdata[level].perDay;
-        spells[level].bonus = sheetSpellMetdata[level].bonus;
-        spells[level].dc = sheetSpellMetdata[level].dc;
-      }
+      spells.forEach(function (spellsForLevel, level) {
+        spellsForLevel.known = sheetSpellMetdata[level].known;
+        spellsForLevel.perDay = sheetSpellMetdata[level].perDay;
+        spellsForLevel.bonus = sheetSpellMetdata[level].bonus;
+        spellsForLevel.dc = sheetSpellMetdata[level].dc;
+      });
     }
   }
 

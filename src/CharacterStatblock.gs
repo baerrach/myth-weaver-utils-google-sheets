@@ -505,9 +505,7 @@ function spells(character) {
       if (preparation) {
         lines.push("[B]" + className + " (" + classSpells.type + " " + preparation + ")[/B]");
       }
-      for (var spellLevel=0; spellLevel < classSpells.length; spellLevel++) {
-        currentLevelSpells = classSpells[spellLevel];
-
+      classSpells.forEach(function (currentLevelSpells, spellLevel) {
         spellDescriptions = [];
         usedTotal = 0;
         for (var i=0; i < currentLevelSpells.length; i++) {
@@ -586,7 +584,7 @@ function spells(character) {
 
         lines.push(spellDescriptionPrefix.join(""));
         lines.push("  " + spellDescriptions.join("\n  "));
-      }
+      });
 
       lines.push("");
     }
