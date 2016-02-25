@@ -3,6 +3,24 @@ var CASTER_PREPARATION_PREPARED = "Prepared";
 
 function Character(name) {
   this.name = name;
+  this.skillsTrainedOnly = ["Disable Device",
+                            "Handle Animal",
+                            "Knowledge (Arcana)",
+                            "Knowledge (Dungeoneering)",
+                            "Knowledge (Engineering)",
+                            "Knowledge (Geography)",
+                            "Knowledge (History)",
+                            "Knowledge (Local)",
+                            "Knowledge (Nature)",
+                            "Knowledge (Nobility)",
+                            "Knowledge (Planes)",
+                            "Knowledge (Religion)",
+                            "Linguistics",
+                            "Profession",
+                            "Sleight of Hand",
+                            "Spellcraft",
+                            "Use Magic Device"]
+
 }
 Character.prototype.getTrainedSkills = function() {
   var filteredSkills = [],
@@ -27,7 +45,7 @@ Character.prototype.getUntrainedSkills = function() {
   skills = this.skills;
   for (skillName in skills) {
     skill = skills[skillName];
-    if (!skill.rank && skill.isUseableUntrained) {
+    if (!skill.rank && this.skillsTrainedOnly.indexOf(skill.name) === -1) {
       filteredSkills.push(skill);
     }
   }
@@ -42,7 +60,7 @@ Character.prototype.getUnusableSkills = function() {
   skills = this.skills;
   for (skillName in skills) {
     skill = skills[skillName];
-    if (!skill.rank && !skill.isUseableUntrained) {
+    if (!skill.rank && this.skillsTrainedOnly.indexOf(skill.name) !== -1) {
       filteredSkills.push(skill);
     }
   }
@@ -480,7 +498,39 @@ function parseCharacter(json) {
     var sheetSkills = sheetdata.getSkills(),
         sheetSkill,
         skill,
-        armorCheckPenalty = 0;
+        armorCheckPenalty = 0,
+        trainedSkillAdjustments,
+        trainedSkillAdjustment,
+        index,
+        parts;
+
+    // adjust for trained skills
+    trainedSkillAdjustments = sheetdata.getFeats().filter(function(f) {
+      return startsWith(f, "{trainedSkills");
+    });
+    if (trainedSkillAdjustments.length === 1) {
+      parts = trainedSkillAdjustments[0].slice(1,-1).split(":").slice(1);
+      for (var i=0; i < parts.length; i++) {
+        trainedSkillAdjustment = parts[i].slice(1);
+        index = character.skillsTrainedOnly.indexOf(trainedSkillAdjustment);
+        if (parts[i][0] === "+") {
+          // Only add skills that are not already in the list
+          if (index !== -1) {
+            character.skillsTrainedOnly.push(trainedSkillAdjustment);
+          }
+        }
+        else if (parts[i][0] === "-") {
+          // Only delete skills that are already in the list
+          if (index !== -1) {
+            character.skillsTrainedOnly.splice(index, 1);
+          }
+        }
+        else {
+          Logger.log("Trained Skills adjustments must start with + or -: " + parts[i]);
+        }
+      }
+    }
+
 
     for (var i=0; i < character.protections.length; i++) {
       if (character.protections[i].checkPenalty) {
@@ -498,16 +548,6 @@ function parseCharacter(json) {
       }
       skill = new Score(sheetSkill.name, 0, sheetSkill.modifier);
       skill.rank = sheetSkill.rank;
-      skill.isUseableUntrained = ! (
-        skill.name === "Disable Device"
-          || skill.name === "Handle Animal"
-          || skill.name === "Linguistics"
-          || skill.name === "Profession"
-          || skill.name === "Sleight of Hand"
-          || skill.name === "Spellcraft"
-          || skill.name === "Use Magic Device"
-          || startsWith(skill.name, "Knowledge")
-      )
 
       if (sheetSkill.rank) {
         skill.addAdjustment(new Adjustment(skill.rank, "Rank"));
