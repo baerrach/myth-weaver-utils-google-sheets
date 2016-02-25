@@ -506,7 +506,7 @@ function parseCharacter(json) {
 
     // adjust for trained skills
     trainedSkillAdjustments = sheetdata.getFeats().filter(function(f) {
-      return startsWith(f, "{trainedSkills");
+      return startsWith(f, "{Trained Skills");
     });
     if (trainedSkillAdjustments.length === 1) {
       parts = trainedSkillAdjustments[0].slice(1,-1).split(":").slice(1);
