@@ -313,11 +313,12 @@ function parseCharacter(json) {
       else if ("Will" === to) {
         character.savingThrows.will.addAdjustment(adjustment);
       }
-      else if (character.skills[to]) {
-        character.skills[to].addAdjustment(adjustment);
-      }
       else {
-        Logger.log("Unknown adjustment " + allAdjustments[i]);
+        for (var skill in character.skills) {
+          if (startsWith(skill, to)) {
+            character.skills[skill].addAdjustment(adjustment);
+          }
+        }
       }
     }
   }
