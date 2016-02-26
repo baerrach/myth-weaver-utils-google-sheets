@@ -1,30 +1,57 @@
 function createDiceRolls() {
   var diceRollsSheet = DICE_ROLLS_SHEET.sheet,
+      activeCell,
       characters,
       character,
+      attribute,
+      rollFor,
       value,
       diceRolls = [],
       warnings = [];
 
-  diceRollsSheet.activate();
+  if (!validateActiveSheetIs(DICE_ROLLS_SHEET)) {
+    return;
+  }
 
   characters = CHARACTERS_SHEET.getCharacters();
-  diceRolls.push("[B][U]Initiative[/B][/U]:");
+  activeCell = SpreadsheetApp.getActive().getActiveSheet().getActiveCell();
+  rollFor = activeCell.getValue();
+
+  diceRolls.push("[B][U]" + rollFor + "[/B][/U]:");
   for (var i=0; i < characters.length; i++) {
     character = characters[i];
-    if (character.initiative.value != character.initiative.sheetValue) {
-      value = character.initiative.sheetValue;
-      warnings.push(character.name + " does not have enhanced statblock commands, sheet value differs from calculated value.");
+    if (character[rollFor]) {
+      attribute = character[rollFor];
+    }
+    else if (character.skills[rollFor]) {
+      attribute = character.skills[rollFor];
+    }
+    else if (character.savingThrows[rollFor.toLowerCase()]) {
+      attribute = character.savingThrows[rollFor.toLowerCase()];
     }
     else {
-      value = character.initiative.value;
+      attribute = undefined;
     }
-    diceRolls.push(character.name + ": [roll]1d20" + toModifier(value) + "z[/roll] " + character.initiative.toString());
+    if (attribute) {
+      if (attribute.value != attribute.sheetValue) {
+        value = attribute.sheetValue;
+        warnings.push(character.name + " does not have enhanced statblock commands, sheet value differs from calculated value.");
+      }
+      else {
+        value = attribute.value;
+      }
+      diceRolls.push(character.name + ": [roll]1d20" + toModifier(value) + "z[/roll] " + attribute.toString());
+    }
+    else {
+      warnings.push("Character does not have attribute, saving throw, or skill " + rollFor);
+    }
   }
 
   if (warnings) {
     diceRolls = diceRolls.concat("", warnings);
   }
 
-  diceRollsSheet.getRange(DICE_ROLLS_SHEET.firstDataRow, DICE_ROLLS_SHEET.column.diceRolls).setValue(diceRolls.join("\n"));
+  activeCell = activeCell.offset(0, 1);
+  activeCell.setValue(diceRolls.join("\n"));
+  activeCell.activate();
 }
