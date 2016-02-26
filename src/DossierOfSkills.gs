@@ -13,7 +13,8 @@ function createDossierOfSkills() {
       skillName,
       skill,
       skillRow,
-      skillCells;
+      skillCells,
+      rankCells;
 
   knownSkills = [].concat.apply([], transpose(allCells)[DOSSIERS_SHEET.column.skill-1].slice(DOSSIERS_SHEET.firstDataRow));
   knownSkills = knownSkills.filter(function (d) {
@@ -28,12 +29,14 @@ function createDossierOfSkills() {
     }
     skills = character.skills;
     skillCells = arrayOfZeros(Math.max(MAX_SKILLS, knownSkills.length));
+    rankCells = arrayOfZeros(Math.max(MAX_SKILLS, knownSkills.length));
 
     for (skillName in skills) {
       skill = skills[skillName];
       skillRow = findSkillRow(knownSkills, skill.name);
       // Always use the sheet value, not the calculate value for dossier of skills.
       skillCells[skillRow] = skill.sheetValue;
+      rankCells[skillRow] = "Ranks = " + parseInt(skill.rank, 10);
     }
 
     // write character name
@@ -42,6 +45,9 @@ function createDossierOfSkills() {
     // write skill values
     var values = transpose([skillCells])
     dossierSheet.getRange(DOSSIERS_SHEET.firstDataRow, DOSSIERS_SHEET.column.firstCharacter+i, skillCells.length, 1).setValues(values);
+    // set ranks into
+    values = transpose([rankCells]);
+    dossierSheet.getRange(DOSSIERS_SHEET.firstDataRow, DOSSIERS_SHEET.column.firstCharacter+i, skillCells.length, 1).setNotes(values);
 
     // rewrite knownSkills
     values = transpose([knownSkills]);
