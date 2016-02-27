@@ -92,6 +92,7 @@ var SPELLS_DB_SHEET = {
     Occultist: 94,
     Spiritualist: 95,
     Skald: 96,
+    Investigator: 97
   },
   get sheet () {
     return getSheet(this.name);
