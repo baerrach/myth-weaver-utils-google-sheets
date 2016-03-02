@@ -15,6 +15,7 @@ function onOpen(e) {
     .addItem('Create dossier of skills', 'createDossierOfSkills')
     .addItem('Create dossier summary (using all "Characters")', 'createDossierSummary')
     .addItem('Create encumbrance for character ("Characters:active row")', 'createEncumbrance')
+    .addItem('Create myth-weaver sheet magic codes ("Characters:active row")', 'createMagicCodes')
     .addItem('Create statblock for all characters (using all "Characters")', 'createAllCharactersStatblock')
     .addItem('Create statblock for character ("Characters:active row")', 'createStatblock')
     .addToUi();

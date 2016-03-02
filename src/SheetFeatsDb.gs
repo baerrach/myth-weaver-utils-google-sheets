@@ -9,6 +9,7 @@ var FEATS_DB_SHEET = {
     type: 3,
     description: 4,
     benefit: 7,
+    textForSheet: 31,
   },
   get sheet () {
     return getSheet(this.name);

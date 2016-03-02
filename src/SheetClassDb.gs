@@ -9,6 +9,8 @@ var CLASS_DB_SHEET = {
     class: 2,
     feature: 3,
     description: 4,
+    textForSheet: 5,
+    textForSpellblock: 6,
   },
   get sheet () {
     return getSheet(this.name);

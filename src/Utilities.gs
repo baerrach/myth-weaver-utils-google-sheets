@@ -1,12 +1,22 @@
 /**
-Copied from http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
-Protected against undefined strings.
-*/
+ Copied from http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
+ Protected against undefined strings.
+ */
 function capitalizeFirstLetter(s) {
   if (s === undefined || s === null || s === "") {
     return s;
   }
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/**
+ Copied from http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
+ */
+function replaceAll(s, find, replace) {
+  if (s === undefined || s === null || s === "") {
+    return s;
+  }
+  return s.split(find).join(replace);
 }
 
 /**
@@ -26,6 +36,23 @@ function transpose(a){
 }
 
 /**
+ Find the all matching rows in a database for all criteria supplied.
+ criterion: {
+ column: <index to match>,
+ value: <value to match>
+ }
+ */
+function findAll(db, criteria) {
+  var row,
+      match;
+  return db.filter(function (row) {
+    return criteria.reduce(function (p, c) {
+      return p && (c.value === undefined || row[c.column] === c.value);
+    }, true);
+  });
+}
+
+/**
  Find the first matching row in a database for all criteria supplied.
  criterion: {
  column: <index to match>,
@@ -33,13 +60,7 @@ function transpose(a){
  }
  */
 function find(db, criteria) {
-  var row,
-      match;
-  return db.filter(function (row) {
-    return criteria.reduce(function (p, c) {
-      return p && (c.value === undefined || row[c.column] === c.value);
-    }, true);
-  })[0];
+  return findAll(db, criteria)[0];
 }
 
 /**

@@ -1,16 +1,12 @@
-var TRAITS_DB_SHEET = {
-  name: "traitsdb",
+var HALFWAY_HOUSE_SHEET = {
+  name: "Halfway House",
   headerRow: 1,
   get firstDataRow () {
     return this.headerRow + 1;
   },
   column: {
-    url: 1,
-    type: 3,
-    category: 4,
-    name: 5,
-    description: 14,
-    textForSheet: 16,
+    name: 1,
+    textForSheet: 2,
   },
   get sheet () {
     return getSheet(this.name);

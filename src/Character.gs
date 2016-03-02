@@ -22,6 +22,34 @@ function Character(name) {
                             "Use Magic Device"]
 
 }
+/**
+ Return an array of all the classes this character has defined in the property "class"
+ Experimental sheet uses "Investigator (Sleuth) 2 / Wizard 1"
+ */
+Character.prototype.getClasses = function() {
+  var classes = [],
+      classRegExp = /(\w+) ?(\(.+\))? ?(\d+)? ?/,
+      matches,
+      values;
+
+  values = this.class.split("/");
+  for (var i = 0; i < values.length; i++) {
+    var s = values[i];
+    matches = s.match(classRegExp);
+    if (matches === null) {
+      Logger.log("getClasses() Unable to match class string '" + this.class + "' against regular expression");
+      return;
+    }
+    if (matches[1]) {
+      classes.push(matches[1]);
+    }
+    if (matches[2]) {
+      classes.push(matches[1] + " " + matches[2]);
+    }
+  }
+
+  return classes;
+}
 Character.prototype.getTrainedSkills = function() {
   var filteredSkills = [],
       skill,
