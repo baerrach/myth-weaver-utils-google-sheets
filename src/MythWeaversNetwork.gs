@@ -14,9 +14,9 @@ function getCharacterJSON(id) {
 
   var data = JSON.parse(json);
   var obj = data.sheetdata;
-  delete obj.data;
   delete obj.sheet_template;
-  delete obj.revisions
+  delete obj.sheet_data;
+  obj.sheetdata = obj.data; // rename for changes made to myth-weaver sheets around 2016-05-19
 
   // Pathfinder Experimental txt blocks
   delete obj.sheetdata["__txt_statblock"];
