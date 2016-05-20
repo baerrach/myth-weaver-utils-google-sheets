@@ -3,6 +3,7 @@ function onInstall(e) {
 }
 
 function onOpen(e) {
+  Logger = BetterLog.useSpreadsheet(); // Fixes Issue #69
   Logger.log("onOpen AuthMode=" + e.authMode);
   var ui = SpreadsheetApp.getUi();
   ui.createMenu('Myth-Weavers')
