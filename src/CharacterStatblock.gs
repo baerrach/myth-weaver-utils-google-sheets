@@ -514,7 +514,7 @@ function spells(character) {
           spellDescription = [];
           spellName = spell.name
           if (spell.note) {
-            spell.name += " " + spell.note;
+            spellName += " " + spell.note;
           }
           if (CASTER_PREPARATION_PREPARED === preparation) {
             if (!spell.memorized) {
@@ -533,7 +533,7 @@ function spells(character) {
           else {
             spellDescription.push(spell.cast);
           }
-          spellDescription.push("[B]" + spell.name + "[/B]");
+          spellDescription.push("[B]" + spellName + "[/B]");
           if (spell.school) {
             spellSchool = [];
             spellSchool.push("[I]");
@@ -547,6 +547,7 @@ function spells(character) {
             spellSchool.push("[/I]");
             spellDescription.push(spellSchool.join(""));
           }
+          spellDescription.push("[spoiler=SRD][pfsrd=spell]"+spell.name+"[/pfsrd][/spoiler]");
 
           spellDescriptions.push(spellDescription.join(" "));
         }
